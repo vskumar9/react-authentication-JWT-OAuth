@@ -17,10 +17,8 @@ export const signUpRoute = {
 
         const hashedPassword = await bcrypt.hash(password, 10);
         const newUser = {
-            hairColor: '',
-            eyeColor: '',
-            height: 0,
             favoriteFood: '',
+            hairColor: '',
             bio: '',
         };
 

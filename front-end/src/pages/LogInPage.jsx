@@ -1,19 +1,42 @@
 import { useState, React } from 'react'
 import { useNavigate } from 'react-router-dom'
+import axios from 'axios'
+import useToken from '../auth/useToken.jsx'
 
 
 const LogInPage = () => {
 
     const navigate = useNavigate();
+    const [ token, setToken ] = useToken();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [showSuccessMessage, setShowSuccessMessage] = useState(false);
     const [showErrorMessage, setShowErrorMessage] = useState(false);
 
     const OnLogInClicked = async () => {
-        alert('Log in functionality not implemented yet');
-        setShowErrorMessage(true);
-        setShowErrorMessage("Uh oh... something went wrong and we couldn't log you in.");
+        // alert('Log in functionality not implemented yet');
+        try{
+
+          const response = await axios.post('/api/login', {
+              email: email,
+              password: password
+          });
+  
+          const { token } = response.data;
+          setToken(token); // Store the token in local storage
+          navigate('/'); // Redirect to home page on success
+        }
+        catch (error) {
+            console.error('Error logging in:', error);
+            setShowErrorMessage(true);
+            setTimeout(() => {
+                setShowErrorMessage(false);
+            }, 5000);
+        }
+
+
+        // setShowErrorMessage(true);
+        // setShowErrorMessage("Uh oh... something went wrong and we couldn't log you in.");
         
         // const response = await fetch('/api/login', {
         //     method: 'POST',
@@ -34,15 +57,15 @@ const LogInPage = () => {
         //     alert(`Error: ${error.message}`);
         //     setShowSuccessMessage(false);
         // }
-        console.log('Logging in with:', email, password);
-        // Simulate a successful login
-        setTimeout(() => {
-            setShowSuccessMessage(true);
-            setTimeout(() => {
-                setShowSuccessMessage(false);
-                navigate('/home'); // Redirect to home page on success
-            }, 3000);
-        }, 1000);
+        // console.log('Logging in with:', email, password);
+        // // Simulate a successful login
+        // setTimeout(() => {
+        //     setShowSuccessMessage(true);
+        //     setTimeout(() => {
+        //         setShowSuccessMessage(false);
+        //         navigate('/home'); // Redirect to home page on success
+        //     }, 3000);
+        // }, 1000);
     }
 
   return (

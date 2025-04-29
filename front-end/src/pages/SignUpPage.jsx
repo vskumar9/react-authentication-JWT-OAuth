@@ -1,9 +1,13 @@
 import { useState, React } from 'react'
 import { useNavigate } from 'react-router-dom'
+import axios from 'axios'
+import useToken from '../auth/useToken.jsx'
+
 
 const SignUpPage = () => {
 
     const navigate = useNavigate();
+    const [token, setToken] = useToken();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [Confirmpassword, setConfirmPassword] = useState('');
@@ -11,7 +15,36 @@ const SignUpPage = () => {
     const [showErrorMessage, setShowErrorMessage] = useState(false);
 
     const OnSignUpClicked = async () => {
-        alert('Log in functionality not implemented yet');
+      try{
+        const response = await axios.post('/api/signup', {
+            email: email,
+            password: password
+        });
+        if (response.status === 200) {
+            const { token } = response.data;
+            setToken(token); // Store the token in local storage
+            setShowSuccessMessage(true);
+            setTimeout(() => {
+              setShowSuccessMessage(false);
+            }, 5000);
+            navigate('/'); // Redirect to home page on success
+        }
+        else if (response.status === 400) {
+            setShowErrorMessage(true);
+            setTimeout(() => {
+                setShowErrorMessage(false);
+            }, 5000);
+          }
+      }
+      catch (error) {
+        console.error('Error signing up:', error);
+        setShowErrorMessage(true);
+        setTimeout(() => {
+            setShowErrorMessage(false);
+        }, 5000);
+      }
+      
+      {
         // const response = await fetch('/api/login', {
         //     method: 'POST',
         //     headers: {
@@ -31,15 +64,17 @@ const SignUpPage = () => {
         //     alert(`Error: ${error.message}`);
         //     setShowSuccessMessage(false);
         // }
-        console.log('Logging in with:', email, password);
+        // console.log('Logging in with:', email, password);
         // Simulate a successful login
-        setTimeout(() => {
-            setShowSuccessMessage(true);
-            setTimeout(() => {
-                setShowSuccessMessage(false);
-                navigate('/home'); // Redirect to home page on success
-            }, 3000);
-        }, 1000);
+        // setTimeout(() => {
+        //     setShowSuccessMessage(true);
+        //     setTimeout(() => {
+        //         setShowSuccessMessage(false);
+        //         navigate('/'); // Redirect to home page on success
+        //     }, 3000);
+        // }, 1000);
+      }
+
     }
 
   return (
