@@ -1,0 +1,22 @@
+{
+  "dependencies": {
+    "bcrypt": "^5.1.1",
+    "bcryptjs": "^3.0.2",
+    "dotenv": "^16.5.0",
+    "express": "^4.21.2",
+    "init": "^0.1.2",
+    "jsonwebtoken": "^9.0.2",
+    "mongodb": "^3.7.4",
+    "npm": "^11.3.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.26.10",
+    "@babel/node": "^7.26.0",
+    "@babel/preset-env": "^7.26.9",
+    "nodemon": "^3.1.10"
+  },
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "nodemon --exec babel-node -r dotenv/config src/server.js"
+  }
+}
