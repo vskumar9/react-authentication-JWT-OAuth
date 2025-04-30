@@ -4,6 +4,8 @@ import LogInPage from './pages/LogInPage';
 import SignUpPage from './pages/SignUpPage';
 import { UserInfoPage } from './pages/UserInfoPage';
 import PrivateRoutes from './auth/PrivateRoute';
+import PleaseVirifiedEmailPage from './pages/PleaseVirifiedEmailPage';
+import EmailVerificationLandingPage from './pages/EmailVerificationLandingPage';
 
 
 export const AppRoutes = () => {
@@ -13,6 +15,8 @@ export const AppRoutes = () => {
                 <Route path="/" element={<PrivateRoutes><UserInfoPage /></PrivateRoutes>} />
                 <Route path="/login" element={<LogInPage />} />
                 <Route path="/sign-up" element={<SignUpPage />} />
+                <Route path="/verify-email" element={<PleaseVirifiedEmailPage />} />
+                <Route path="/verify-email/:verificationString" element={<EmailVerificationLandingPage />} />
                 {/* Add more routes as needed */}
             </Routes>
         </Router>

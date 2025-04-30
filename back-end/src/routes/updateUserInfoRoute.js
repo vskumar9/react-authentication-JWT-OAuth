@@ -19,8 +19,10 @@ export const updateUserInfoRoute = {
         jwt.verify(token, process.env.JWT_SECRET, async (err, decoded) => {
             if (err) return res.status(401).json({ message: 'Unauthorized' });
 
-            const { id } = decoded;
+            const { id, isValidated } = decoded;
             if (id !== userId) return res.status(403).json({ message: 'Forbidden' });
+
+            if (!isValidated) return res.status(403).json({ message: 'Forbidden' });
 
             const db = await getDbConnection('react-auth-db');
 
@@ -36,7 +38,7 @@ export const updateUserInfoRoute = {
                 { returnDocument: 'after' }
             );
 
-            const { email, isVerified, info } = result.value;
+            const { email, info } = result.value;
 
             jwt.sign(
                 { id, email, isVerified, info },

@@ -1,6 +1,8 @@
 import { getDbConnection } from '../db.js';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
+import { v4 as uuidv4 } from 'uuid';
+import { sendEmail } from '../util/sendEmail.js';
 
 export const signUpRoute = {
     path: '/api/signup',
@@ -16,6 +18,9 @@ export const signUpRoute = {
         }
 
         const hashedPassword = await bcrypt.hash(password, 10);
+
+        const verificationString = uuidv4(); // Generate a unique verification token
+
         const newUser = {
             favoriteFood: '',
             hairColor: '',
@@ -27,7 +32,21 @@ export const signUpRoute = {
             password: hashedPassword,
             info: newUser,
             isValidated: false,
+            verificationString, // Store the verification token in the database
         });
+
+
+        try {
+            await sendEmail({
+                to: email, 
+                from: 'vaddisanjeevkumar9676@gmail.com', 
+                subject: 'Email Verification', 
+                text: `Please verify your email by clicking on the following link: http://localhost:3000/verify-email/${verificationString}`, 
+                html: `<p>Please verify your email by clicking on the following link:</p><a href="http://localhost:3000/verify-email/${verificationString}">Verify Email</a>`
+            });
+        } catch (error) {
+            
+        }
 
         const { insertedId } = result; // Use insertedId instead of id
         jwt.sign(

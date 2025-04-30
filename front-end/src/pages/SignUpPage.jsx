@@ -7,7 +7,7 @@ import useToken from '../auth/useToken.jsx'
 const SignUpPage = () => {
 
     const navigate = useNavigate();
-    const [token, setToken] = useToken();
+    const [, setToken] = useToken();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [Confirmpassword, setConfirmPassword] = useState('');
@@ -26,8 +26,8 @@ const SignUpPage = () => {
             setShowSuccessMessage(true);
             setTimeout(() => {
               setShowSuccessMessage(false);
-            }, 5000);
-            navigate('/'); // Redirect to home page on success
+            }, 10000);
+            navigate('/verify-email'); // Redirect to home page on success
         }
         else if (response.status === 400) {
             setShowErrorMessage(true);
@@ -90,6 +90,7 @@ const SignUpPage = () => {
           OnSignUpClicked()
           setEmail(''); // Clear email input after login attempt
           setPassword(''); // Clear password input after login attempt
+          setConfirmPassword(''); // Clear password input after login attempt
           }}>Sign Up</button>
         <button onClick={() => navigate('/login')}>Already have an account? Log In</button>
     </div>
