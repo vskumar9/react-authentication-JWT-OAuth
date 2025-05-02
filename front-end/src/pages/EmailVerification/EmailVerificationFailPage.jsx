@@ -9,7 +9,7 @@ const EmailVerificationFailPage = () => {
       <p>
         Something went wrong and we couldn't verify your email. Please try again later.
       </p>
-      <button onClick={() => navigate('/sign-up')}>Go to home page</button>
+      <button onClick={() => navigate('/sign-up')}>Back to Sign Up</button>
     </div>
   )
 }

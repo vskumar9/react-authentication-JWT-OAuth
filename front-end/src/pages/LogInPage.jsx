@@ -1,17 +1,45 @@
-import { useState, React } from 'react'
+import { useState, React, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import useToken from '../auth/useToken.jsx'
+import { useQueryParams } from '../util/useQueryParams'
+
 
 
 const LogInPage = () => {
 
     const navigate = useNavigate();
-    const [ token, setToken ] = useToken();
+    const [ , setToken ] = useToken();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [showSuccessMessage, setShowSuccessMessage] = useState(false);
     const [showErrorMessage, setShowErrorMessage] = useState(false);
+
+    const [googleOauthUrl, setGoogleOauthUrl] = useState('');
+    const { token: oauthToken } = useQueryParams(); // Get the token from the URL
+
+    useEffect(() => {
+      if (oauthToken) {
+        setToken(oauthToken); // Store the token in local storage
+        setShowSuccessMessage(true);
+        setTimeout(() => {
+          setShowSuccessMessage(false);
+        }, 5000);
+        navigate('/'); // Redirect to home page on success
+      }
+    }, [oauthToken, setToken, navigate]);
+
+    useEffect(() => {
+      const loadOauthUrl = async () => {
+        try {
+          const response = await axios.get('/auth/google/url');
+          setGoogleOauthUrl(response.data.url);
+        } catch (error) {
+          console.error('Error fetching Google OAuth URL:', error);
+        }
+      }
+      loadOauthUrl();
+    }, []);
 
     const OnLogInClicked = async () => {
         // alert('Log in functionality not implemented yet');
@@ -33,39 +61,6 @@ const LogInPage = () => {
                 setShowErrorMessage(false);
             }, 5000);
         }
-
-
-        // setShowErrorMessage(true);
-        // setShowErrorMessage("Uh oh... something went wrong and we couldn't log you in.");
-        
-        // const response = await fetch('/api/login', {
-        //     method: 'POST',
-        //     headers: {
-        //         'Content-Type': 'application/json',
-        //     },
-        //     body: JSON.stringify({ email, password }),
-        // });
-        // if (response.ok) {
-        //     const data = await response.json();
-        //     setShowSuccessMessage(true);
-        //     setTimeout(() => {
-        //         setShowSuccessMessage(false);
-        //     }, 3000);
-        //     navigate('/home'); // Redirect to home page on success
-        // } else {
-        //     const error = await response.json();
-        //     alert(`Error: ${error.message}`);
-        //     setShowSuccessMessage(false);
-        // }
-        // console.log('Logging in with:', email, password);
-        // // Simulate a successful login
-        // setTimeout(() => {
-        //     setShowSuccessMessage(true);
-        //     setTimeout(() => {
-        //         setShowSuccessMessage(false);
-        //         navigate('/home'); // Redirect to home page on success
-        //     }, 3000);
-        // }, 1000);
     }
 
   return (
@@ -83,6 +78,7 @@ const LogInPage = () => {
           }}>Log In</button>
         <button onClick={() => navigate('/forgot-password')}>Forgot your password?</button>
         <button onClick={() => navigate('/sign-up')}>Don't have an account? Sign Up</button>
+        <button disabled = {!googleOauthUrl} onClick={()=> window.location.href = googleOauthUrl}>Log in  with Google</button>
     </div>
   )
 }

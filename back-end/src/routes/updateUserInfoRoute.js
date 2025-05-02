@@ -41,7 +41,7 @@ export const updateUserInfoRoute = {
             const { email, info } = result.value;
 
             jwt.sign(
-                { id, email, isVerified, info },
+                { id, email, isValidated, info },
                 process.env.JWT_SECRET,
                 { expiresIn: process.env.JWT_EXPIRATION },
                 (err, newToken) => {

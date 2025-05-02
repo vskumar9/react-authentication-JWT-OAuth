@@ -2,7 +2,7 @@ import React from 'react'
 import { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import axios from 'axios'
-import useToken from '../auth/useToken.jsx'
+import useToken from '../../auth/useToken.jsx'
 import EmailVerificationSuccessPage from './EmailVerificationSuccessPage.jsx'
 import EmailVerificationFailPage from './EmailVerificationFailPage.jsx'
 
